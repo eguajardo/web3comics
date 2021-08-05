@@ -1,15 +1,10 @@
 import { useEthers, useConfig } from "@usedapp/core";
-import Ceramic from "@ceramicnetwork/http-client";
-import { IDX } from "@ceramicstudio/idx";
-
-import { ThreeIdConnect, EthereumAuthProvider } from "@3id/connect";
-
-import KeyDidResolver from "key-did-resolver";
-import ThreeIdResolver from "@ceramicnetwork/3id-did-resolver";
-import { DID } from "dids";
+import { useEffect } from "react";
+import { useProfile } from "../../hooks/useProfile";
 
 function AccountButton() {
-  const { activateBrowserWallet, account, chainId, library } = useEthers();
+  const { activateBrowserWallet, account, chainId } = useEthers();
+  const { profile } = useProfile();
   const config = useConfig();
 
   console.log("Account:", account);
@@ -21,39 +16,9 @@ function AccountButton() {
   const supportedChain = true;
   console.log("supportedChain", supportedChain);
 
-  const connect = async () => {
-    // activateBrowserWallet();
-
-    if (library && account) {
-      const ceramic = new Ceramic("https://ceramic-clay.3boxlabs.com");
-      const idx = new IDX({ ceramic });
-
-      const threeIdConnect = new ThreeIdConnect();
-      console.log("library", library);
-      console.log("account:", account);
-      console.log("window.ethereum", window.ethereum);
-
-      const authProvider = new EthereumAuthProvider(library.provider, account);
-      await threeIdConnect.connect(authProvider);
-
-      const provider = await threeIdConnect.getDidProvider();
-
-      const resolver = {
-        ...KeyDidResolver.getResolver(),
-        ...ThreeIdResolver.getResolver(ceramic),
-      };
-      const did = new DID({ resolver });
-      ceramic.did = did;
-
-      ceramic.did.setProvider(provider);
-      await ceramic.did.authenticate();
-
-      const profile = await idx.get("basicProfile");
-      console.log("profile", profile);
-    }
-  };
-
-  connect();
+  useEffect(() => {
+    console.log("profile from button", profile);
+  }, [profile]);
 
   return (
     <div>
