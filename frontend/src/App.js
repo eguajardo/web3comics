@@ -1,6 +1,5 @@
 import "./App.css";
 import { Switch, Route } from "react-router-dom";
-import { newIdx } from "./helpers/ceramic";
 import { useEthers } from "@usedapp/core";
 import { useProfile } from "./hooks/useProfile";
 
@@ -10,25 +9,11 @@ import { useEffect } from "react";
 
 function App() {
   const { account, library } = useEthers();
-  const { setProfile } = useProfile();
+  const { resetProfile } = useProfile();
 
   useEffect(() => {
-    const updateProfile = async () => {
-      if (account && library && library.provider) {
-        const idx = await newIdx(library.provider, account);
-
-        let profile = await idx.get("basicProfile");
-        if (!profile) {
-          profile = {};
-        }
-        console.log("profile from App", profile);
-        profile.did = idx.id;
-        profile.name = "test name";
-        setProfile(idx, profile);
-      }
-    };
-    updateProfile();
-  }, [account, library, setProfile]);
+    resetProfile();
+  }, [account, library, resetProfile]);
 
   return (
     <div>

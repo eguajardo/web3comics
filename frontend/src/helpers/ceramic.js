@@ -9,11 +9,9 @@ import { DID } from "dids";
 
 export async function newIdx(provider, address) {
   const ceramic = new Ceramic("http://localhost:7007");
+  // const ceramic = new Ceramic("https://ceramic-clay.3boxlabs.com");
 
   const threeIdConnect = new ThreeIdConnect();
-  console.log("provider", provider);
-  console.log("account:", address);
-  console.log("window.ethereum", window.ethereum);
 
   const authProvider = new EthereumAuthProvider(provider, address);
   await threeIdConnect.connect(authProvider);

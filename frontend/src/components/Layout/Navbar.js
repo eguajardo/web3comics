@@ -1,4 +1,4 @@
-import AccountButton from "../UI/AccountButton";
+import LoginButton from "../UI/LoginButton";
 
 function Navbar() {
   return (
@@ -17,7 +17,7 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav ml-auto">
-            <AccountButton />
+            <LoginButton />
           </div>
         </div>
       </div>
