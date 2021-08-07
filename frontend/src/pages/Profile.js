@@ -2,12 +2,15 @@ import FormGroup from "../components/UI/FormGroup";
 import { useFormFields } from "../hooks/useFormFields";
 import { useProfile } from "../hooks/useProfile";
 import { web3storage } from "../helpers/ipfs";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 function Profile() {
   const { profile, setProfile, idx } = useProfile();
+  const [formProcessing, setFormProcessing] = useState(false);
 
-  console.log("profile", profile);
-  console.log("idx", idx);
+  console.log("Profile", profile);
+  console.log("IDX", idx);
 
   const {
     formFields,
@@ -35,6 +38,12 @@ function Profile() {
     },
   });
 
+  useEffect(() => {
+    if (profile) {
+      formFields.name.value = profile.name;
+    }
+  }, [profile]);
+
   const formSubmissionHandler = async (event) => {
     event.preventDefault();
 
@@ -42,7 +51,7 @@ function Profile() {
       return;
     }
 
-    console.log("entered image", formFields.image.enteredFiles);
+    setFormProcessing(true);
 
     let updatedProfile = { name: formFields.name.value };
     if (formFields.image.enteredFiles) {
@@ -61,9 +70,9 @@ function Profile() {
       };
     }
 
-    // FIXME: should call setProfile
-    await idx.merge("basicProfile", updatedProfile);
-    console.log("Updated profile");
+    setProfile(idx, updatedProfile);
+    setFormProcessing(false);
+    toast.success("Profile updated!");
   };
 
   return (
@@ -73,7 +82,8 @@ function Profile() {
           <FormGroup
             formField={formFields.image}
             hasError={hasError(formFields.image)}
-            previewSrc={profile.image.original.src}
+            previewSrc={profile?.image?.original?.src ?? null}
+            previewClass="profile-picture img-thumbnail mb-4"
             valueChangeHandler={createValueChangeHandler("image")}
             inputBlurHandler={createInputBlurHandler("image")}
           />
@@ -84,9 +94,32 @@ function Profile() {
             inputBlurHandler={createInputBlurHandler("name")}
           />
 
-          <button name="submit" className="btn btn-primary btn-lg btn-block">
-            {!profile && "Create Profile"}
-            {profile && "Update Profile"}
+          <button
+            name="submit"
+            className="btn btn-primary btn-lg btn-block"
+            disabled={formProcessing}
+          >
+            {!profile && !formProcessing && "Create Profile"}
+            {profile && !formProcessing && "Update Profile"}
+            {formProcessing && (
+              <span>
+                <span
+                  class="spinner-grow spinner-grow-sm ml-2 mb-1"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  class="spinner-grow spinner-grow-sm ml-2 mb-1"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  class="spinner-grow spinner-grow-sm ml-2 mb-1"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </span>
+            )}
           </button>
         </form>
       )}

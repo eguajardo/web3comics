@@ -2,17 +2,20 @@ import { toGatewayURL } from "nft.storage";
 
 function FormGroup(props) {
   let className =
-    props.formField.type === "file" ? "form-control-file" : "form-control";
+    props.formField.type === "file" ? "custom-file-input" : "form-control";
 
   if (props.hasError) {
     className += " is-invalid";
   }
 
   let previewSrc = props.previewSrc;
+  let imageInputLabel = "[Choose image]";
   if (props.formField.enteredFiles && props.formField.enteredFiles[0]) {
     previewSrc = URL.createObjectURL(props.formField.enteredFiles[0]);
+    imageInputLabel = props.formField.enteredFiles[0].name;
   } else if (previewSrc) {
     previewSrc = toGatewayURL(props.previewSrc);
+    imageInputLabel = "[Change image]";
   }
 
   return (
@@ -24,20 +27,27 @@ function FormGroup(props) {
             accept="image/*"
             src={previewSrc}
             alt="Profile"
-            className="mb-4"
+            className={props.previewClass}
           />
         </div>
       )}
-      <input
-        type={props.formField.type}
-        name={props.formField.id}
-        id={props.formField.id}
-        onChange={props.valueChangeHandler}
-        onBlur={props.inputBlurHandler}
-        value={props.formField.value}
-        placeholder={props.formField.placeholder}
-        className={className}
-      />
+      <div className={props.formField.type === "file" ? "custom-file" : ""}>
+        <input
+          type={props.formField.type}
+          name={props.formField.id}
+          id={props.formField.id}
+          onChange={props.valueChangeHandler}
+          onBlur={props.inputBlurHandler}
+          value={props.formField.value}
+          placeholder={props.formField.placeholder}
+          className={className}
+        />
+        {props.formField.type === "file" && (
+          <label class="custom-file-label" for="customFile">
+            {imageInputLabel}
+          </label>
+        )}
+      </div>
       <div className="invalid-feedback">{props.hasError}</div>
     </div>
   );

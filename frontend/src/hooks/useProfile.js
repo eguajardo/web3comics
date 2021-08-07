@@ -16,15 +16,19 @@ export function useProfile() {
     };
   }, [setState, setIdx]);
 
-  const setProfile = async (newIdx, newProfile) => {
-    if (!newIdx) {
+  const setProfile = async (updatedIdx, updatedProfile) => {
+    if (!updatedIdx) {
       throw new Error("Missing IDX instance");
     }
 
-    profile = newProfile;
-    idx = newIdx;
+    if (profile) {
+      profile = { ...profile, ...updatedProfile };
+    } else {
+      profile = updatedProfile;
+    }
+    idx = updatedIdx;
 
-    await idx.set("basicProfile", profile);
+    await idx.merge("basicProfile", profile);
 
     for (const listener of listeners) {
       listener[0](profile);
