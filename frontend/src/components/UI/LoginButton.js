@@ -10,18 +10,16 @@ function LoginButton() {
 
   const connect = async () => {
     if (!account) {
-      await activateBrowserWallet();
+      activateBrowserWallet();
     }
 
     if (account && library && library.provider) {
       const idx = await newIdx(library.provider, account);
+      const idXProfile = await idx.get("basicProfile");
+      console.log("idXProfile", idXProfile);
 
-      const profile = await idx.get("basicProfile");
-      console.log("profile", profile);
-
-      if (profile) {
-        setProfile(idx, profile);
-      } else {
+      setProfile(idx, idXProfile);
+      if (!idXProfile || !idXProfile.name || !idXProfile.image) {
         console.log("redirecting...");
         routerHistory.push("/profile");
         return <></>;
@@ -31,7 +29,7 @@ function LoginButton() {
 
   return (
     <div>
-      {!profile.did && (
+      {!profile && (
         <button
           className="btn btn-outline-info nav-item nav-link px-4 ml-2"
           onClick={connect}

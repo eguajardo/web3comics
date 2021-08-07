@@ -1,3 +1,5 @@
+import { toGatewayURL } from "nft.storage";
+
 function FormGroup(props) {
   let className =
     props.formField.type === "file" ? "form-control-file" : "form-control";
@@ -6,9 +8,26 @@ function FormGroup(props) {
     className += " is-invalid";
   }
 
+  let previewSrc = props.previewSrc;
+  if (props.formField.enteredFiles && props.formField.enteredFiles[0]) {
+    previewSrc = URL.createObjectURL(props.formField.enteredFiles[0]);
+  } else if (previewSrc) {
+    previewSrc = toGatewayURL(props.previewSrc);
+  }
+
   return (
     <div className="form-group">
       <label htmlFor={props.formField.id}>{props.formField.label}</label>
+      {previewSrc && (
+        <div>
+          <img
+            accept="image/*"
+            src={previewSrc}
+            alt="Profile"
+            className="mb-4"
+          />
+        </div>
+      )}
       <input
         type={props.formField.type}
         name={props.formField.id}

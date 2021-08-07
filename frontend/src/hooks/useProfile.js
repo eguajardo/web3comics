@@ -1,35 +1,41 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 
-let profile = {};
+let profile = null;
+let idx = null;
+let listeners = [];
 
 export function useProfile() {
   const setState = useState(profile)[1];
+  const setIdx = useState(idx)[1];
 
-  const setProfile = useCallback(
-    async (idx, value) => {
-      if (!idx) {
-        throw new Error("Missing IDX instance");
-      }
+  useEffect(() => {
+    listeners.push([setState, setIdx]);
 
-      //if (!value || !value.did || !value.name || !value.image) {
-      if (!value || !value.did || !value.name) {
-        throw new Error(
-          "Missing a required profile attribute (did, name and/or image)"
-        );
-      }
+    return () => {
+      listeners = listeners.filter((li) => li !== [setState, setIdx]);
+    };
+  }, [setState, setIdx]);
 
-      profile = value;
+  const setProfile = async (newIdx, newProfile) => {
+    if (!newIdx) {
+      throw new Error("Missing IDX instance");
+    }
 
-      await idx.set("basicProfile", profile);
-      setState(profile);
-    },
-    [setState]
-  );
+    profile = newProfile;
+    idx = newIdx;
+
+    await idx.set("basicProfile", profile);
+
+    for (const listener of listeners) {
+      listener[0](profile);
+      listener[1](idx);
+    }
+  };
 
   const resetProfile = useCallback(() => {
-    profile = {};
-    setState(profile);
-  }, [setState]);
+    setState(null);
+    setIdx(null);
+  }, [setState, setIdx]);
 
-  return { profile, setProfile, resetProfile };
+  return { profile, setProfile, resetProfile, idx };
 }

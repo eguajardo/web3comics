@@ -37,11 +37,14 @@ export function useFormFields(initialValues) {
   };
 
   const validateForm = () => {
-    let isValid = false;
+    let isValid = true;
 
     for (const key in formFields) {
-      if (formFields[key].validator(formFields[key])) {
-        isValid = true;
+      if (
+        formFields[key].validator &&
+        formFields[key].validator(formFields[key])
+      ) {
+        isValid = false;
         break;
       }
     }
