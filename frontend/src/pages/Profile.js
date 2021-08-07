@@ -4,8 +4,11 @@ import { useProfile } from "../hooks/useProfile";
 import { web3storage } from "../helpers/ipfs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useLocation, useHistory } from "react-router-dom";
 
 function Profile() {
+  const location = useLocation();
+  const routerHistory = useHistory();
   const { profile, setProfile, idx } = useProfile();
   const [formProcessing, setFormProcessing] = useState(false);
 
@@ -70,9 +73,24 @@ function Profile() {
       };
     }
 
-    setProfile(idx, updatedProfile);
-    setFormProcessing(false);
-    toast.success("Profile updated!");
+    try {
+      setProfile(idx, updatedProfile);
+      setFormProcessing(false);
+      toast.success("Profile updated!");
+
+      let referer;
+      if (location.state !== undefined) {
+        referer = location.state.referer;
+      } else {
+        referer = "/";
+      }
+      routerHistory.push(referer);
+      return <></>;
+    } catch (err) {
+      setFormProcessing(false);
+      console.log(err);
+      toast.error(err.message);
+    }
   };
 
   return (
