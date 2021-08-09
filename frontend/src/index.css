@@ -54,7 +54,12 @@ a,
   color: rgb(189, 189, 189);
 }
 
-.content-container {
+.actions-container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.page-container {
   padding: 1.5em 1.5em 1.5em 1.5em;
   border: 1px solid #ddd;
   border-radius: 8px 8px 8px 8px;

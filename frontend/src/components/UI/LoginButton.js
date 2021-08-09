@@ -1,7 +1,9 @@
+import { newIdx } from "../../helpers/ceramic";
+
 import { useEthers } from "@usedapp/core";
 import { useProfile } from "../../hooks/useProfile";
-import { newIdx } from "../../helpers/ceramic";
 import { useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function LoginButton() {
   const { activateBrowserWallet, account, library } = useEthers();
@@ -36,6 +38,16 @@ function LoginButton() {
         >
           Login
         </button>
+      )}
+      {profile && (
+        <NavLink
+          id="new-link"
+          className="nav-item nav-link"
+          activeClassName="active"
+          to="/profile"
+        >
+          Profile
+        </NavLink>
       )}
     </div>
   );

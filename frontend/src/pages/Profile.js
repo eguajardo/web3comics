@@ -1,10 +1,15 @@
-import FormGroup from "../components/UI/FormGroup";
+import toast from "react-hot-toast";
+import { web3storage } from "../helpers/ipfs";
+
 import { useFormFields } from "../hooks/useFormFields";
 import { useProfile } from "../hooks/useProfile";
-import { web3storage } from "../helpers/ipfs";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useLocation, useHistory } from "react-router-dom";
+
+import LoginCheck from "../components/UI/LoginCheck";
+import PageContainer from "../components/Layout/PageContainer";
+import FormGroup from "../components/UI/FormGroup";
+import SubmitButton from "../components/UI/SubmitButton";
 
 function Profile() {
   const location = useLocation();
@@ -82,7 +87,7 @@ function Profile() {
       if (location.state !== undefined) {
         referer = location.state.referer;
       } else {
-        referer = "/";
+        referer = "/profile";
       }
       routerHistory.push(referer);
       return <></>;
@@ -94,7 +99,7 @@ function Profile() {
   };
 
   return (
-    <div className="container content-container">
+    <PageContainer>
       {idx && idx.id && (
         <form onSubmit={formSubmissionHandler}>
           <FormGroup
@@ -112,37 +117,14 @@ function Profile() {
             inputBlurHandler={createInputBlurHandler("name")}
           />
 
-          <button
-            name="submit"
-            className="btn btn-primary btn-lg btn-block"
-            disabled={formProcessing}
-          >
+          <SubmitButton>
             {!profile && !formProcessing && "Create Profile"}
             {profile && !formProcessing && "Update Profile"}
-            {formProcessing && (
-              <span>
-                <span
-                  class="spinner-grow spinner-grow-sm ml-2 mb-1"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-                <span
-                  class="spinner-grow spinner-grow-sm ml-2 mb-1"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-                <span
-                  class="spinner-grow spinner-grow-sm ml-2 mb-1"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              </span>
-            )}
-          </button>
+          </SubmitButton>
         </form>
       )}
-      {(!idx || !idx.id) && <div>Please Login first</div>}
-    </div>
+      <LoginCheck idx={idx} />
+    </PageContainer>
   );
 }
 

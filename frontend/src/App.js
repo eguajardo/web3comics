@@ -3,10 +3,12 @@ import { Switch, Route } from "react-router-dom";
 import { useEthers } from "@usedapp/core";
 import { useProfile } from "./hooks/useProfile";
 import { Toaster } from "react-hot-toast";
-
-import Profile from "./pages/Profile";
-import Navbar from "./components/Layout/Navbar";
 import { useEffect } from "react";
+
+import Navbar from "./components/Layout/Navbar";
+import Profile from "./pages/Profile";
+import Comics from "./pages/Comics";
+import NewComic from "./pages/NewComic";
 
 function App() {
   const { account, library } = useEthers();
@@ -25,6 +27,15 @@ function App() {
       <Switch>
         <Route path="/profile">
           <Profile />
+        </Route>
+        <Route path="/comic/new">
+          <NewComic />
+        </Route>
+        <Route path="/:did">
+          <Comics />
+        </Route>
+        <Route path="/">
+          <Comics />
         </Route>
       </Switch>
     </div>

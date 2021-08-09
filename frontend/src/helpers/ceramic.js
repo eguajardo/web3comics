@@ -7,9 +7,20 @@ import KeyDidResolver from "key-did-resolver";
 import ThreeIdResolver from "@ceramicnetwork/3id-did-resolver";
 import { DID } from "dids";
 
-export async function newIdx(provider, address) {
+export async function anonymousIdx() {
   const ceramic = new Ceramic("http://localhost:7007");
   // const ceramic = new Ceramic("https://ceramic-clay.3boxlabs.com");
+
+  const aliases = {
+    comics: "kjzl6cwe1jw147w5a0pmkedsnai26uizx2oyf6b7gu753a0qdw1r8elhtgxmi7z",
+  };
+
+  return new IDX({ ceramic, aliases });
+}
+
+export async function newIdx(provider, address) {
+  const idx = await anonymousIdx();
+  const ceramic = await idx.ceramic;
 
   const threeIdConnect = new ThreeIdConnect();
 
@@ -30,7 +41,6 @@ export async function newIdx(provider, address) {
   await ceramic.did.authenticate();
   console.log("did after:", did);
 
-  const idx = new IDX({ ceramic });
-
+  console.log("IDX", idx);
   return idx;
 }

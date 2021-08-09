@@ -18,6 +18,35 @@ function FormGroup(props) {
     imageInputLabel = "[Change image]";
   }
 
+  let inputField;
+  if (props.formField.type === "textarea") {
+    inputField = (
+      <textarea
+        name={props.formField.id}
+        id={props.formField.id}
+        onChange={props.valueChangeHandler}
+        onBlur={props.inputBlurHandler}
+        value={props.formField.value}
+        placeholder={props.formField.placeholder}
+        rows={props.formField.rows}
+        className={className}
+      />
+    );
+  } else {
+    inputField = (
+      <input
+        type={props.formField.type}
+        name={props.formField.id}
+        id={props.formField.id}
+        onChange={props.valueChangeHandler}
+        onBlur={props.inputBlurHandler}
+        value={props.formField.value}
+        placeholder={props.formField.placeholder}
+        className={className}
+      />
+    );
+  }
+
   return (
     <div className="form-group">
       <label htmlFor={props.formField.id}>{props.formField.label}</label>
@@ -32,18 +61,9 @@ function FormGroup(props) {
         </div>
       )}
       <div className={props.formField.type === "file" ? "custom-file" : ""}>
-        <input
-          type={props.formField.type}
-          name={props.formField.id}
-          id={props.formField.id}
-          onChange={props.valueChangeHandler}
-          onBlur={props.inputBlurHandler}
-          value={props.formField.value}
-          placeholder={props.formField.placeholder}
-          className={className}
-        />
+        {inputField}
         {props.formField.type === "file" && (
-          <label class="custom-file-label" for="customFile">
+          <label class="custom-file-label" htmlFor="customFile">
             {imageInputLabel}
           </label>
         )}
