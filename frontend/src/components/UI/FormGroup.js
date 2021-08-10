@@ -67,8 +67,8 @@ function FormGroup(props) {
             {imageInputLabel}
           </label>
         )}
+        <div className="invalid-feedback">{props.hasError}</div>
       </div>
-      <div className="invalid-feedback">{props.hasError}</div>
     </div>
   );
 }

@@ -1,52 +1,43 @@
+import { TileDocument } from "@ceramicnetwork/stream-tile";
+import { anonymousIdx } from "../helpers/ceramic";
+
 import { useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useProfile } from "../hooks/useProfile";
 
 import PageContainer from "../components/Layout/PageContainer";
 import ActionsContainer from "../components/Layout/ActionsContainer";
-import ComicCard from "../components/UI/ComicCard";
 import { Link } from "react-router-dom";
 
-function Comics() {
-  const { did } = useParams();
+function ViewComic() {
+  const { publicationsStream } = useParams();
   const { idx } = useProfile();
   const [content, setContent] = useState([]);
+  const [authorDid, setAuthorDid] = useState(null);
 
-  const loadComics = useCallback(async () => {
-    let comicsList = [];
-    if (idx) {
-      comicsList = await idx.get("comics");
+  const loadPublications = useCallback(async () => {
+    let ceramic;
+    if (!idx) {
+      ceramic = (await anonymousIdx()).ceramic;
+    } else {
+      ceramic = idx.ceramic;
     }
 
-    if (comicsList && comicsList.comics) {
-      let comicsCards = [];
-
-      comicsList.comics.forEach((comic, i) => {
-        comicsCards.push(
-          <ComicCard
-            key={i}
-            title={comic.title}
-            description={comic.description}
-            coverImageURL={comic.coverImageURL}
-            publicationsStream={comic.publicationsStream}
-          />
-        );
-      });
-
-      setContent(comicsCards);
-    }
-  }, [idx]);
+    const tile = await TileDocument.load(ceramic, publicationsStream);
+    console.log("tile.content", tile.content);
+    setAuthorDid(tile.content.author);
+  }, [idx, publicationsStream]);
 
   useEffect(() => {
-    loadComics();
-  }, [loadComics]);
+    loadPublications();
+  }, [loadPublications]);
 
   return (
     <div>
       <ActionsContainer>
-        {idx && did === idx.id && (
+        {idx && authorDid === idx.id && (
           <Link className="btn btn-info ml-2" to="/comic/new">
-            Add new comic
+            Add new publication
           </Link>
         )}
       </ActionsContainer>
@@ -61,4 +52,4 @@ function Comics() {
   );
 }
 
-export default Comics;
+export default ViewComic;

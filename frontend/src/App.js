@@ -9,6 +9,7 @@ import Navbar from "./components/Layout/Navbar";
 import Profile from "./pages/Profile";
 import Comics from "./pages/Comics";
 import NewComic from "./pages/NewComic";
+import ViewComic from "./pages/ViewComic";
 
 function App() {
   const { account, library } = useEthers();
@@ -30,6 +31,9 @@ function App() {
         </Route>
         <Route path="/comic/new">
           <NewComic />
+        </Route>
+        <Route path="/comic/:publicationsStream">
+          <ViewComic />
         </Route>
         <Route path="/:did">
           <Comics />

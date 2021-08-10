@@ -61,30 +61,30 @@ function Profile() {
 
     setFormProcessing(true);
 
-    let updatedProfile = { name: formFields.name.value };
-    if (formFields.image.enteredFiles) {
-      const cid = await web3storage.put(formFields.image.enteredFiles, {
-        wrapWithDirectory: false,
-      });
-      console.log("cid", cid);
-
-      updatedProfile.image = {
-        original: {
-          src: `ipfs://${cid}`,
-          mimeType: formFields.image.enteredFiles[0].type,
-          width: 500,
-          height: 200,
-        },
-      };
-    }
-
     try {
+      let updatedProfile = { name: formFields.name.value };
+      if (formFields.image.enteredFiles) {
+        const cid = await web3storage.put(formFields.image.enteredFiles, {
+          wrapWithDirectory: false,
+        });
+        console.log("cid", cid);
+
+        updatedProfile.image = {
+          original: {
+            src: `ipfs://${cid}`,
+            mimeType: formFields.image.enteredFiles[0].type,
+            width: 500,
+            height: 200,
+          },
+        };
+      }
+
       setProfile(idx, updatedProfile);
       setFormProcessing(false);
       toast.success("Profile updated!");
 
       let referer;
-      if (location.state !== undefined) {
+      if (location.state) {
         referer = location.state.referer;
       } else {
         referer = "/profile";
@@ -117,7 +117,7 @@ function Profile() {
             inputBlurHandler={createInputBlurHandler("name")}
           />
 
-          <SubmitButton>
+          <SubmitButton formProcessing={formProcessing}>
             {!profile && !formProcessing && "Create Profile"}
             {profile && !formProcessing && "Update Profile"}
           </SubmitButton>
