@@ -26,7 +26,7 @@ function FormGroup(props) {
         id={props.formField.id}
         onChange={props.valueChangeHandler}
         onBlur={props.inputBlurHandler}
-        value={props.formField.value}
+        value={props.formField.value ? props.formField.value : ""}
         placeholder={props.formField.placeholder}
         rows={props.formField.rows}
         className={className}
@@ -40,7 +40,7 @@ function FormGroup(props) {
         id={props.formField.id}
         onChange={props.valueChangeHandler}
         onBlur={props.inputBlurHandler}
-        value={props.formField.value}
+        value={props.formField.value ? props.formField.value : ""}
         placeholder={props.formField.placeholder}
         className={className}
       />
@@ -63,7 +63,7 @@ function FormGroup(props) {
       <div className={props.formField.type === "file" ? "custom-file" : ""}>
         {inputField}
         {props.formField.type === "file" && (
-          <label class="custom-file-label" htmlFor="customFile">
+          <label className="custom-file-label" htmlFor="customFile">
             {imageInputLabel}
           </label>
         )}

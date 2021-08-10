@@ -9,17 +9,17 @@ function SubmitButton(props) {
       {props.formProcessing && (
         <span>
           <span
-            class="spinner-grow spinner-grow-sm ml-2 mb-1"
+            className="spinner-grow spinner-grow-sm ml-2 mb-1"
             role="status"
             aria-hidden="true"
           ></span>
           <span
-            class="spinner-grow spinner-grow-sm ml-2 mb-1"
+            className="spinner-grow spinner-grow-sm ml-2 mb-1"
             role="status"
             aria-hidden="true"
           ></span>
           <span
-            class="spinner-grow spinner-grow-sm ml-2 mb-1"
+            className="spinner-grow spinner-grow-sm ml-2 mb-1"
             role="status"
             aria-hidden="true"
           ></span>
