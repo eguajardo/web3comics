@@ -1,9 +1,11 @@
 import toast from "react-hot-toast";
-import { web3storage } from "../helpers/ipfs";
+import { web3storage, nftStorage } from "../helpers/ipfs";
+import { File } from "nft.storage";
 import { TileDocument } from "@ceramicnetwork/stream-tile";
 
 import { useState } from "react";
 import { useFormFields } from "../hooks/useFormFields";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useProfile } from "../hooks/useProfile";
 import { useHistory } from "react-router-dom";
 
@@ -12,7 +14,8 @@ import PageContainer from "../components/Layout/PageContainer";
 import FormGroup from "../components/UI/FormGroup";
 import SubmitButton from "../components/UI/SubmitButton";
 
-function NewComic() {
+function NewPublication() {
+  const { publicationsStream } = useParams();
   const routerHistory = useHistory();
   const { idx } = useProfile();
   const [formProcessing, setFormProcessing] = useState(false);
@@ -24,37 +27,34 @@ function NewComic() {
     validateForm,
     hasError,
   } = useFormFields({
-    image: {
-      type: "file",
-      id: "image",
-      label: "Cover picture",
-      validator: (field) => {
-        if (!field.value || field.value.trim() === "") {
-          return "Cover picture is missing!";
-        }
-      },
-    },
     title: {
       type: "text",
       id: "title",
       label: "Title",
-      placeholder: "My awesome comic",
+      placeholder: "Episode 42: The answer",
       validator: (field) => {
         if (!field.value || field.value.trim() === "") {
           return "Title must not be empty!";
         }
       },
     },
-    description: {
-      type: "textarea",
-      id: "description",
-      label: "Description",
-      placeholder:
-        "Follow the adventures of Comictron in this awesome web3comic",
-      rows: 5,
+    thumbnail: {
+      type: "file",
+      id: "thumbnail",
+      label: "Thumbnail (100px x 100px)",
       validator: (field) => {
         if (!field.value || field.value.trim() === "") {
-          return "Description must not be empty!";
+          return "Thumbnail is missing!";
+        }
+      },
+    },
+    image: {
+      type: "file",
+      id: "image",
+      label: "Content image",
+      validator: (field) => {
+        if (!field.value || field.value.trim() === "") {
+          return "Image is missing!";
         }
       },
     },
@@ -70,39 +70,38 @@ function NewComic() {
     setFormProcessing(true);
 
     try {
-      const cid = await web3storage.put(formFields.image.enteredFiles, {
-        wrapWithDirectory: false,
+      const thumbnailCid = await web3storage.put(
+        formFields.thumbnail.enteredFiles,
+        {
+          wrapWithDirectory: false,
+        }
+      );
+
+      const metadata = await nftStorage.store({
+        name: formFields.title.value,
+        description: formFields.title.value,
+        image: formFields.image.enteredFiles[0],
       });
-      console.log("cid", cid);
 
-      const doc = await TileDocument.create(idx.ceramic, {
-        author: idx.id,
-        publications: [],
+      console.log("metadata.data", metadata.data);
+      console.log("metadata.url", metadata.url);
+
+      const doc = await TileDocument.load(idx.ceramic, publicationsStream);
+
+      let newContent = doc.content;
+      newContent.publications.push({
+        thumbnail: `ipfs://${thumbnailCid}`,
+        metadata: metadata.url,
       });
-      console.log(doc.content);
-      const publicationsStream = doc.id.toString();
 
-      let comicsList = await idx.get("comics");
-      console.log("comicsList:", comicsList);
+      console.log("newContent", newContent);
 
-      if (!comicsList) {
-        comicsList = { comics: [] };
-      }
-
-      const newComic = {
-        title: formFields.title.value,
-        description: formFields.description.value,
-        coverImageURL: `ipfs://${cid}`,
-        publicationsStream: publicationsStream,
-      };
-
-      comicsList.comics.push(newComic);
-      await idx.set("comics", comicsList);
+      await doc.update(newContent);
 
       setFormProcessing(false);
-      toast.success("New comic created!");
+      toast.success("Publication created!");
 
-      routerHistory.push(`/comic/${newComic.publicationsStream}`);
+      routerHistory.push(`/comic/${publicationsStream}`);
       return <></>;
     } catch (err) {
       setFormProcessing(false);
@@ -123,10 +122,11 @@ function NewComic() {
             inputBlurHandler={createInputBlurHandler("title")}
           />
           <FormGroup
-            formField={formFields.description}
-            hasError={hasError(formFields.description)}
-            valueChangeHandler={createValueChangeHandler("description")}
-            inputBlurHandler={createInputBlurHandler("description")}
+            formField={formFields.thumbnail}
+            hasError={hasError(formFields.thumbnail)}
+            previewClass="publication-thumbnail img-thumbnail mb-4"
+            valueChangeHandler={createValueChangeHandler("thumbnail")}
+            inputBlurHandler={createInputBlurHandler("thumbnail")}
           />
           <FormGroup
             formField={formFields.image}
@@ -146,4 +146,4 @@ function NewComic() {
   );
 }
 
-export default NewComic;
+export default NewPublication;

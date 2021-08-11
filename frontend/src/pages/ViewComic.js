@@ -24,8 +24,12 @@ function ViewComic() {
     }
 
     const tile = await TileDocument.load(ceramic, publicationsStream);
+    // const content = { ...tile.content, author: idx.id };
+    // await tile.update(content);
     console.log("tile.content", tile.content);
     setAuthorDid(tile.content.author);
+
+    setContent(<div>{JSON.stringify(tile.content)}</div>);
   }, [idx, publicationsStream]);
 
   useEffect(() => {
@@ -36,7 +40,10 @@ function ViewComic() {
     <div>
       <ActionsContainer>
         {idx && authorDid === idx.id && (
-          <Link className="btn btn-info ml-2" to="/comic/new">
+          <Link
+            className="btn btn-info ml-2"
+            to={`/comic/${publicationsStream}/new`}
+          >
             Add new publication
           </Link>
         )}

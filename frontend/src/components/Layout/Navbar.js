@@ -36,7 +36,7 @@ function Navbar() {
               activeClassName="active"
               to={`/${idx.id}`}
             >
-              My Publications
+              My Creations
             </NavLink>
           )}
           <div className="navbar-nav ml-auto">

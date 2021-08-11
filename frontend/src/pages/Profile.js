@@ -95,6 +95,7 @@ function Profile() {
       setFormProcessing(false);
       console.log(err);
       toast.error(err.message);
+      throw err;
     }
   };
 

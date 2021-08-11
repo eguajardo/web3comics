@@ -111,3 +111,9 @@ a,
   max-height: 200px;
   max-width: 200px;
 }
+
+.publication-thumbnail {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
