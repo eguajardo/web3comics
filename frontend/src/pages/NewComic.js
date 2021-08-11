@@ -81,6 +81,7 @@ function NewComic() {
       });
       console.log(doc.content);
       const publicationsStream = doc.id.toString();
+      await idx.ceramic.pin.add(publicationsStream);
 
       let comicsList = await idx.get("comics");
       console.log("comicsList:", comicsList);

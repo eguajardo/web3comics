@@ -117,3 +117,9 @@ a,
   height: 100px;
   object-fit: cover;
 }
+
+.publication-card {
+  max-width: 100% !important;
+  font-size: 20px;
+  margin-bottom: 0 !important;
+}

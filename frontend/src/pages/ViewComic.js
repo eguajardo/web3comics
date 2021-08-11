@@ -7,6 +7,7 @@ import { useProfile } from "../hooks/useProfile";
 
 import PageContainer from "../components/Layout/PageContainer";
 import ActionsContainer from "../components/Layout/ActionsContainer";
+import PublicationCard from "../components/UI/PublicationCard";
 import { Link } from "react-router-dom";
 
 function ViewComic() {
@@ -29,7 +30,25 @@ function ViewComic() {
     console.log("tile.content", tile.content);
     setAuthorDid(tile.content.author);
 
-    setContent(<div>{JSON.stringify(tile.content)}</div>);
+    const publicationsList = tile.content.publications;
+
+    if (publicationsList) {
+      let comicsCards = [];
+
+      publicationsList.forEach((publication, i) => {
+        comicsCards.push(
+          <PublicationCard
+            key={i}
+            index={i}
+            metadata={publication.metadata}
+            thumbnail={publication.thumbnail}
+            publicationsStream={publicationsStream}
+          />
+        );
+      });
+
+      setContent(comicsCards);
+    }
   }, [idx, publicationsStream]);
 
   useEffect(() => {
@@ -50,9 +69,7 @@ function ViewComic() {
       </ActionsContainer>
       <PageContainer>
         <div className="content-container">
-          <div className="card-deck d-flex justify-content-center">
-            {content}
-          </div>
+          <div className="">{content}</div>
         </div>
       </PageContainer>
     </div>

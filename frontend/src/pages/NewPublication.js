@@ -1,6 +1,5 @@
 import toast from "react-hot-toast";
 import { web3storage, nftStorage } from "../helpers/ipfs";
-import { File } from "nft.storage";
 import { TileDocument } from "@ceramicnetwork/stream-tile";
 
 import { useState } from "react";
@@ -124,7 +123,7 @@ function NewPublication() {
           <FormGroup
             formField={formFields.thumbnail}
             hasError={hasError(formFields.thumbnail)}
-            previewClass="publication-thumbnail img-thumbnail mb-4"
+            previewClass="publication-thumbnail img-fluid mb-4"
             valueChangeHandler={createValueChangeHandler("thumbnail")}
             inputBlurHandler={createInputBlurHandler("thumbnail")}
           />

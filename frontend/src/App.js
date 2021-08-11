@@ -11,6 +11,7 @@ import Comics from "./pages/Comics";
 import NewComic from "./pages/NewComic";
 import ViewComic from "./pages/ViewComic";
 import NewPublication from "./pages/NewPublication";
+import ViewPublication from "./pages/ViewPublication";
 
 function App() {
   const { account, library } = useEthers();
@@ -35,6 +36,9 @@ function App() {
         </Route>
         <Route path="/comic/:publicationsStream/new">
           <NewPublication />
+        </Route>
+        <Route path="/comic/:publicationsStream/:index">
+          <ViewPublication />
         </Route>
         <Route path="/comic/:publicationsStream">
           <ViewComic />
