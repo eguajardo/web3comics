@@ -8,9 +8,7 @@ function PublicationCard(props) {
   const [metadata, setMetadata] = useState();
 
   const loadPublicationCard = useCallback(async () => {
-    const metadataFile = await fetch(
-      toGatewayURL(toGatewayURL(props.metadata))
-    );
+    const metadataFile = await fetch(toGatewayURL(props.metadata));
 
     const json = await metadataFile.json();
 
@@ -33,7 +31,7 @@ function PublicationCard(props) {
       <div className="row">
         <div className="col-md-2">
           <img
-            className="card-img-top publication-thumbnail img-fluid"
+            className="publication-thumbnail img-fluid"
             alt={props.title}
             src={toGatewayURL(props.thumbnail)}
           />

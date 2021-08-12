@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useProfile } from "../../hooks/useProfile";
 
-import LoginButton from "../UI/LoginButton";
+import AccountButton from "../UI/AccountButton";
 
 function Navbar() {
   const { idx } = useProfile();
@@ -40,7 +40,7 @@ function Navbar() {
             </NavLink>
           )}
           <div className="navbar-nav ml-auto">
-            <LoginButton />
+            <AccountButton />
           </div>
         </div>
       </div>

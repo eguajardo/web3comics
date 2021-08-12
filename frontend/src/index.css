@@ -108,8 +108,17 @@ a,
 }
 
 .profile-picture {
-  max-height: 200px;
-  max-width: 200px;
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+}
+
+.profile-picture-thumbnail {
+  margin-top: -1em;
+  margin-bottom: -1em;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
 }
 
 .publication-thumbnail {
@@ -122,4 +131,8 @@ a,
   max-width: 100% !important;
   font-size: 20px;
   margin-bottom: 0 !important;
+}
+
+.comic-card {
+  max-width: 100% !important;
 }

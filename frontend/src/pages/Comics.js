@@ -52,9 +52,7 @@ function Comics() {
       </ActionsContainer>
       <PageContainer>
         <div className="content-container">
-          <div className="card-deck d-flex justify-content-center">
-            {content}
-          </div>
+          <div className="">{content}</div>
         </div>
       </PageContainer>
     </div>

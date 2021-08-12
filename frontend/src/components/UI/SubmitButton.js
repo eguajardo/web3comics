@@ -1,3 +1,5 @@
+import LoadingDots from "./LoadingDots";
+
 function SubmitButton(props) {
   return (
     <button
@@ -6,25 +8,7 @@ function SubmitButton(props) {
       disabled={props.formProcessing}
     >
       {props.children}
-      {props.formProcessing && (
-        <span>
-          <span
-            className="spinner-grow spinner-grow-sm ml-2 mb-1"
-            role="status"
-            aria-hidden="true"
-          ></span>
-          <span
-            className="spinner-grow spinner-grow-sm ml-2 mb-1"
-            role="status"
-            aria-hidden="true"
-          ></span>
-          <span
-            className="spinner-grow spinner-grow-sm ml-2 mb-1"
-            role="status"
-            aria-hidden="true"
-          ></span>
-        </span>
-      )}
+      {props.formProcessing && <LoadingDots />}
     </button>
   );
 }
