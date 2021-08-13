@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
 import "./PublicationStore.sol";
-import "./Utils.sol";
 
 /**
  * @title PublicationToken

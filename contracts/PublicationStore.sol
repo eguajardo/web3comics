@@ -12,6 +12,8 @@ import "./PublicationToken.sol";
  */
 contract PublicationStore is Context {
 
+    uint8 public constant MINIMUM_TOKEN_PRICE = 1;
+
     PublicationToken internal tokenContract;
 
     /**
@@ -64,6 +66,7 @@ contract PublicationStore is Context {
     ) external {
         require (Utils.isNotEmptyString(streamId), "ERROR_EMPTY_STREAM_ID");
         require (Utils.isNotEmptyString(uri), "ERROR_EMPTY_URI");
+        require (price >= MINIMUM_TOKEN_PRICE, "ERROR_PRICE_UNDER_LIMIT");
 
         PublicationData storage publication = _publicationsData[streamId][index];
         publication.uri = uri;
