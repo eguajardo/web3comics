@@ -71,8 +71,8 @@ a,
 
 .card {
   margin-bottom: 1em;
-  max-width: 15em;
-  min-width: 15em;
+  max-width: 250px;
+  min-width: 250px;
   margin-bottom: 2em !important;
   -moz-box-shadow: 0px 2px 2px 0px rgb(0 0 0 / 15%);
   -webkit-box-shadow: 0px 2px 2px 0px rgb(0 0 0 / 15%);
@@ -135,4 +135,20 @@ a,
 
 .comic-card {
   max-width: 100% !important;
+}
+
+.card-corner {
+  margin-bottom: -1em;
+  margin-right: -0.5em;
+}
+
+.nft-card {
+  width: 300px;
+  height: 450px;
+}
+
+.nft-card-image {
+  max-width: 300px;
+  max-height: 350px;
+  object-fit: cover;
 }

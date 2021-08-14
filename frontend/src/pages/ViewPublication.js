@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { TileDocument } from "@ceramicnetwork/stream-tile";
 import { anonymousIdx } from "../helpers/ceramic";
 import { toGatewayURL } from "nft.storage";
@@ -7,6 +8,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useProfile } from "../hooks/useProfile";
 import { useContract } from "../hooks/useContract";
+import { useContractFunction } from "@usedapp/core";
 
 import PageContainer from "../components/Layout/PageContainer";
 import ActionsContainer from "../components/Layout/ActionsContainer";
@@ -23,8 +25,13 @@ function ViewPublication() {
   const [publicationsList, setPublicationsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formProcessing, setFormProcessing] = useState(false);
-  const publicationStoreContract = useContract("PublicationStore");
   const [publicationPrice, setPublicationPrice] = useState();
+  const publicationStoreContract = useContract("PublicationStore");
+
+  const { state: ethTxState, send: sendBuyToken } = useContractFunction(
+    publicationStoreContract,
+    "buyToken"
+  );
 
   const publicationsListPromise = useMemo(async () => {
     console.log("publicationsListMemo");
@@ -77,10 +84,10 @@ function ViewPublication() {
   const loadFromSmartContract = useCallback(async () => {
     const publicationData = await publicationStoreContract.publicationData(
       publicationsStream,
-      13
+      parseInt(index)
     );
     setPublicationPrice(utils.formatEther(publicationData.price));
-  }, [publicationsStream, publicationStoreContract]);
+  }, [publicationsStream, publicationStoreContract, index]);
 
   useEffect(() => {
     loadFromIPFS();
@@ -97,6 +104,36 @@ function ViewPublication() {
   const reset = () => {
     setMetadata(null);
     setLoading(true);
+  };
+
+  useEffect(() => {
+    if (ethTxState && formProcessing) {
+      switch (ethTxState.status) {
+        case "Success":
+          setFormProcessing(false);
+          toast.success("Publication added to your collection!");
+
+          break;
+        case "Exception":
+        case "Fail":
+          setFormProcessing(false);
+          console.log("Transaction Error:", ethTxState.errorMessage);
+          toast.error(ethTxState.errorMessage);
+          break;
+        default:
+          console.log("Transaction status:", ethTxState.status);
+      }
+    }
+  }, [ethTxState, formProcessing, publicationsStream]);
+
+  const formSubmissionHandler = async (event) => {
+    event.preventDefault();
+
+    setFormProcessing(true);
+
+    sendBuyToken(publicationsStream, parseInt(index), {
+      value: utils.parseEther(publicationPrice),
+    });
   };
 
   return (
@@ -141,9 +178,14 @@ function ViewPublication() {
             />
           </div>
         )}
-        <SubmitButton formProcessing={formProcessing}>
-          {!formProcessing && `Buy and collect for ${publicationPrice}`}
-        </SubmitButton>
+        {publicationPrice && (
+          <form onSubmit={formSubmissionHandler}>
+            <SubmitButton formProcessing={formProcessing}>
+              {!formProcessing &&
+                `Buy and collect for ${publicationPrice} MATIC`}
+            </SubmitButton>
+          </form>
+        )}
       </PageContainer>
     </div>
   );

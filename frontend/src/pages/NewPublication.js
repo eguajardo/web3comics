@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { web3storage, nftStorage } from "../helpers/ipfs";
+import { utils } from "ethers";
 import { TileDocument } from "@ceramicnetwork/stream-tile";
 
 import { useState, useEffect } from "react";
@@ -138,7 +139,12 @@ function NewPublication() {
 
       await doc.update(newContent);
 
-      sendCreatePublicationStore(publicationsStream, index, metadata.url, 1);
+      sendCreatePublicationStore(
+        publicationsStream,
+        index,
+        metadata.url,
+        utils.parseEther(formFields.price.value)
+      );
     } catch (err) {
       setFormProcessing(false);
       console.log(err);

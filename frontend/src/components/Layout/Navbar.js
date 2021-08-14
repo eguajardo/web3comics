@@ -1,10 +1,12 @@
-import { NavLink } from "react-router-dom";
 import { useProfile } from "../../hooks/useProfile";
+import { useEthers } from "@usedapp/core";
 
+import { NavLink } from "react-router-dom";
 import AccountButton from "../UI/AccountButton";
 
 function Navbar() {
   const { idx } = useProfile();
+  const { account } = useEthers();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
@@ -29,6 +31,16 @@ function Navbar() {
           >
             Browse Comics
           </NavLink>
+          {account && (
+            <NavLink
+              id="new-link"
+              className="nav-item nav-link"
+              activeClassName="active"
+              to="/collection"
+            >
+              My collection
+            </NavLink>
+          )}
           {idx && idx.id && (
             <NavLink
               id="new-link"
@@ -36,7 +48,7 @@ function Navbar() {
               activeClassName="active"
               to={`/${idx.id}`}
             >
-              My Creations
+              Publish
             </NavLink>
           )}
           <div className="navbar-nav ml-auto">

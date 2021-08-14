@@ -1,7 +1,7 @@
 export const contracts = {
   "localhost": {
     "PublicationStore": {
-      "address": "0xd6F8Ff0036D8B2088107902102f9415330868109",
+      "address": "0x5b40489524a5733e0F145bf0E1F6712dcDB8E837",
       "abi": [
         {
           "inputs": [
@@ -239,7 +239,7 @@ export const contracts = {
       ]
     },
     "PublicationToken": {
-      "address": "0x11a7B4562b248FD7471DB7FC1c8299FD499fb377",
+      "address": "0x0b8c1b96Eda0A40F218A4DF438B35E821b2Cc1F7",
       "abi": [
         {
           "inputs": [
