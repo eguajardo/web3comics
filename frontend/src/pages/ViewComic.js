@@ -19,7 +19,7 @@ function ViewComic() {
   const loadPublications = useCallback(async () => {
     let ceramic;
     if (!idx) {
-      ceramic = (await anonymousIdx()).ceramic;
+      ceramic = anonymousIdx().ceramic;
     } else {
       ceramic = idx.ceramic;
     }

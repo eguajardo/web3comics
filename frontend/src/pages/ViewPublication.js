@@ -1,15 +1,18 @@
 import { TileDocument } from "@ceramicnetwork/stream-tile";
 import { anonymousIdx } from "../helpers/ceramic";
 import { toGatewayURL } from "nft.storage";
+import { utils } from "ethers";
 
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useProfile } from "../hooks/useProfile";
+import { useContract } from "../hooks/useContract";
 
 import PageContainer from "../components/Layout/PageContainer";
 import ActionsContainer from "../components/Layout/ActionsContainer";
 import { Link } from "react-router-dom";
 import LoadingDots from "../components/UI/LoadingDots";
+import SubmitButton from "../components/UI/SubmitButton";
 
 function ViewPublication() {
   const { publicationsStream, index } = useParams();
@@ -17,39 +20,75 @@ function ViewPublication() {
   const [previousIndex, setPreviousIndex] = useState();
   const [nextIndex, setNextIndex] = useState();
   const [metadata, setMetadata] = useState();
+  const [publicationsList, setPublicationsList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [formProcessing, setFormProcessing] = useState(false);
+  const publicationStoreContract = useContract("PublicationStore");
+  const [publicationPrice, setPublicationPrice] = useState();
 
-  const loadContent = useCallback(async () => {
+  const publicationsListPromise = useMemo(async () => {
+    console.log("publicationsListMemo");
+
     let ceramic;
     if (!idx) {
-      ceramic = (await anonymousIdx()).ceramic;
+      ceramic = anonymousIdx().ceramic;
     } else {
       ceramic = idx.ceramic;
     }
-
     const tile = await TileDocument.load(ceramic, publicationsStream);
-    const publicationsList = tile.content.publications;
+    return tile.content.publications;
+  }, [idx, publicationsStream]);
+
+  publicationsListPromise.then((value) => {
+    setPublicationsList(value);
+  });
+
+  const metadataPromise = useMemo(async () => {
+    console.log("metadataMemo");
+
+    if (publicationsList.length === 0) {
+      return null;
+    }
 
     const currentIndex = parseInt(index);
+
+    console.log("publicationsList", publicationsList);
 
     const metadataFile = await fetch(
       toGatewayURL(publicationsList[currentIndex].metadata)
     );
-    const json = await metadataFile.json();
+    return await metadataFile.json();
+  }, [index, publicationsList]);
 
-    setMetadata(json);
+  metadataPromise.then((value) => {
+    setMetadata(value);
+  });
+
+  const loadFromIPFS = useCallback(async () => {
+    const currentIndex = parseInt(index);
 
     const previous = currentIndex > 0 ? currentIndex - 1 : null;
     const next =
       currentIndex < publicationsList.length - 1 ? currentIndex + 1 : null;
-
     setPreviousIndex(previous);
     setNextIndex(next);
-  }, [idx, publicationsStream, index]);
+  }, [index, publicationsList]);
+
+  const loadFromSmartContract = useCallback(async () => {
+    const publicationData = await publicationStoreContract.publicationData(
+      publicationsStream,
+      13
+    );
+    setPublicationPrice(utils.formatEther(publicationData.price));
+  }, [publicationsStream, publicationStoreContract]);
 
   useEffect(() => {
-    loadContent();
-  }, [loadContent]);
+    loadFromIPFS();
+  }, [loadFromIPFS]);
+
+  useEffect(() => {
+    loadFromSmartContract();
+  }, [loadFromSmartContract]);
 
   const imageLoaded = () => {
     setLoading(false);
@@ -102,6 +141,9 @@ function ViewPublication() {
             />
           </div>
         )}
+        <SubmitButton formProcessing={formProcessing}>
+          {!formProcessing && `Buy and collect for ${publicationPrice}`}
+        </SubmitButton>
       </PageContainer>
     </div>
   );

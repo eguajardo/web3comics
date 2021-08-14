@@ -7,7 +7,7 @@ import KeyDidResolver from "key-did-resolver";
 import ThreeIdResolver from "@ceramicnetwork/3id-did-resolver";
 import { DID } from "dids";
 
-export async function anonymousIdx() {
+export function anonymousIdx() {
   const ceramic = new Ceramic("http://localhost:7007");
   // const ceramic = new Ceramic("https://ceramic-clay.3boxlabs.com");
 
@@ -19,7 +19,7 @@ export async function anonymousIdx() {
 }
 
 export async function newIdx(provider, address) {
-  const idx = await anonymousIdx();
+  const idx = anonymousIdx();
   const ceramic = await idx.ceramic;
 
   const threeIdConnect = new ThreeIdConnect();
