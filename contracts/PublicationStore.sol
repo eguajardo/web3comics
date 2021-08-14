@@ -95,6 +95,19 @@ contract PublicationStore is Context {
     }
 
     /**
+     * @notice Returns the publication data of the given stream and index combination.
+     * @param streamId The ceramic stream ID holding the comic publications
+     * @param index The index of the publication in the comic
+     */
+    function publicationData(
+        string calldata streamId, 
+        uint256 index
+    ) external view returns (PublicationData memory) {
+        require(exist(streamId, index), "ERROR_INVALID_STREAM_OR_INDEX");
+        return _publicationsData[streamId][index];
+    }
+
+    /**
      * @notice PublicationStore URI pointing to the publication metadata.
      * @param streamId The ceramic stream ID holding the comic publications
      * @param index The index of the publication in the comic

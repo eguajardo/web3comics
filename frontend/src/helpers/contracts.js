@@ -1,7 +1,7 @@
 export const contracts = {
   "localhost": {
     "PublicationStore": {
-      "address": "0xb5d4D4a87Cb07f33b5FAd6736D8F1EE7D255d9E9",
+      "address": "0xd6F8Ff0036D8B2088107902102f9415330868109",
       "abi": [
         {
           "inputs": [
@@ -171,6 +171,47 @@ export const contracts = {
               "type": "uint256"
             }
           ],
+          "name": "publicationData",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "uri",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "price",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "author",
+                  "type": "address"
+                }
+              ],
+              "internalType": "struct PublicationStore.PublicationData",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "streamId",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
           "name": "publicationURI",
           "outputs": [
             {
@@ -198,7 +239,7 @@ export const contracts = {
       ]
     },
     "PublicationToken": {
-      "address": "0xD4B3d924b4cF09224aB63078918aa122581602d4",
+      "address": "0x11a7B4562b248FD7471DB7FC1c8299FD499fb377",
       "abi": [
         {
           "inputs": [

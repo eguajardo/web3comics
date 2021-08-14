@@ -42,6 +42,7 @@ function FormGroup(props) {
         onBlur={props.inputBlurHandler}
         value={props.formField.value ? props.formField.value : ""}
         placeholder={props.formField.placeholder}
+        step={props.formField.step}
         className={className}
       />
     );

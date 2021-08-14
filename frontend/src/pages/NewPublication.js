@@ -2,11 +2,13 @@ import toast from "react-hot-toast";
 import { web3storage, nftStorage } from "../helpers/ipfs";
 import { TileDocument } from "@ceramicnetwork/stream-tile";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormFields } from "../hooks/useFormFields";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useProfile } from "../hooks/useProfile";
+import { useContract } from "../hooks/useContract";
 import { useHistory } from "react-router-dom";
+import { useContractFunction } from "@usedapp/core";
 
 import LoginCheck from "../components/UI/LoginCheck";
 import PageContainer from "../components/Layout/PageContainer";
@@ -18,6 +20,10 @@ function NewPublication() {
   const routerHistory = useHistory();
   const { idx } = useProfile();
   const [formProcessing, setFormProcessing] = useState(false);
+
+  const publicationStoreContract = useContract("PublicationStore");
+  const { state: ethTxState, send: sendCreatePublicationStore } =
+    useContractFunction(publicationStoreContract, "createPublicationStore");
 
   const {
     formFields,
@@ -34,6 +40,18 @@ function NewPublication() {
       validator: (field) => {
         if (!field.value || field.value.trim() === "") {
           return "Title must not be empty!";
+        }
+      },
+    },
+    price: {
+      type: "number",
+      id: "price",
+      label: "Price",
+      step: 0.01,
+      validator: (field) => {
+        if (!field.value || field.value <= 0) {
+          console.log("price value:", field.value);
+          return "Price must not be zero!";
         }
       },
     },
@@ -58,6 +76,27 @@ function NewPublication() {
       },
     },
   });
+
+  useEffect(() => {
+    if (ethTxState && formProcessing) {
+      switch (ethTxState.status) {
+        case "Success":
+          setFormProcessing(false);
+          toast.success("Publication created!");
+
+          routerHistory.push(`/comic/${publicationsStream}`);
+          return <></>;
+        case "Exception":
+        case "Fail":
+          setFormProcessing(false);
+          console.log("Transaction Error:", ethTxState.errorMessage);
+          toast.error(ethTxState.errorMessage);
+          break;
+        default:
+          console.log("Transaction status:", ethTxState.status);
+      }
+    }
+  }, [ethTxState, formProcessing, routerHistory, publicationsStream]);
 
   const formSubmissionHandler = async (event) => {
     event.preventDefault();
@@ -95,13 +134,11 @@ function NewPublication() {
 
       console.log("newContent", newContent);
 
+      const index = newContent.publications.length - 1;
+
       await doc.update(newContent);
 
-      setFormProcessing(false);
-      toast.success("Publication created!");
-
-      routerHistory.push(`/comic/${publicationsStream}`);
-      return <></>;
+      sendCreatePublicationStore(publicationsStream, index, metadata.url, 1);
     } catch (err) {
       setFormProcessing(false);
       console.log(err);
@@ -119,6 +156,12 @@ function NewPublication() {
             hasError={hasError(formFields.title)}
             valueChangeHandler={createValueChangeHandler("title")}
             inputBlurHandler={createInputBlurHandler("title")}
+          />
+          <FormGroup
+            formField={formFields.price}
+            hasError={hasError(formFields.price)}
+            valueChangeHandler={createValueChangeHandler("price")}
+            inputBlurHandler={createInputBlurHandler("price")}
           />
           <FormGroup
             formField={formFields.thumbnail}
