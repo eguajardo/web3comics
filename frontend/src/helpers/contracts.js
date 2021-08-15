@@ -1,7 +1,7 @@
 export const contracts = {
   "mumbai": {
     "Users": {
-      "address": "0x152439d1704A3092e02da1336955077526A5318c",
+      "address": "0x6E5b398b9C4A8BaAfEF1Ec0d7B763Bfb8c890A9D",
       "abi": [
         {
           "inputs": [
@@ -51,7 +51,7 @@ export const contracts = {
       ]
     },
     "PublicationStore": {
-      "address": "0x4A614BC303Dc8D31c47618065597fc6ad757976e",
+      "address": "0xa9484fa551799D9DE205FE6A73e0A3B9980A04d4",
       "abi": [
         {
           "inputs": [
@@ -289,7 +289,7 @@ export const contracts = {
       ]
     },
     "PublicationToken": {
-      "address": "0xF89c55Ad60D947ee390F02F53CdE0a5b4b4D1271",
+      "address": "0xC6b801129e23bF224701E55F1C03D9B4d69D0e96",
       "abi": [
         {
           "inputs": [
