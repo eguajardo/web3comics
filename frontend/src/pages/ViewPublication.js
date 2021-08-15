@@ -4,7 +4,6 @@ import { anonymousIdx } from "../helpers/ceramic";
 import { toGatewayURL } from "nft.storage";
 import { utils } from "ethers";
 
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useProfile } from "../hooks/useProfile";
 import { useContract } from "../hooks/useContract";
@@ -12,9 +11,10 @@ import { useContractFunction } from "@usedapp/core";
 
 import PageContainer from "../components/Layout/PageContainer";
 import ActionsContainer from "../components/Layout/ActionsContainer";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import LoadingDots from "../components/UI/LoadingDots";
 import SubmitButton from "../components/UI/SubmitButton";
+import CommentSection from "../components/UI/CommentSection";
 
 function ViewPublication() {
   const { publicationsStream, index } = useParams();
@@ -82,11 +82,13 @@ function ViewPublication() {
   }, [index, publicationsList]);
 
   const loadFromSmartContract = useCallback(async () => {
-    const publicationData = await publicationStoreContract.publicationData(
-      publicationsStream,
-      parseInt(index)
-    );
-    setPublicationPrice(utils.formatEther(publicationData.price));
+    if (publicationStoreContract) {
+      const publicationData = await publicationStoreContract.publicationData(
+        publicationsStream,
+        parseInt(index)
+      );
+      setPublicationPrice(utils.formatEther(publicationData.price));
+    }
   }, [publicationsStream, publicationStoreContract, index]);
 
   useEffect(() => {
@@ -104,6 +106,7 @@ function ViewPublication() {
   const reset = () => {
     setMetadata(null);
     setLoading(true);
+    setPublicationPrice(null);
   };
 
   useEffect(() => {
@@ -130,7 +133,6 @@ function ViewPublication() {
     event.preventDefault();
 
     setFormProcessing(true);
-
     sendBuyToken(publicationsStream, parseInt(index), {
       value: utils.parseEther(publicationPrice),
     });
@@ -187,6 +189,7 @@ function ViewPublication() {
           </form>
         )}
       </PageContainer>
+      <CommentSection publicationsStream={publicationsStream} index={index} />
     </div>
   );
 }

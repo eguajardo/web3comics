@@ -8,6 +8,10 @@ async function main() {
   const utils: Contract = await Utils.deploy();
   await utils.deployed();
 
+  const Users: ContractFactory = await ethers.getContractFactory("Users");
+  const users: Contract = await Users.deploy();
+  await users.deployed();
+
   const publicationStoreFactory: ContractFactory =
     await ethers.getContractFactory("PublicationStore", {
       libraries: {
@@ -27,11 +31,13 @@ async function main() {
   );
 
   console.log("Utils contract address:", utils.address);
+  console.log("Users contract Address:", users.address);
   console.log("PublicationStore contract Address:", publicationStore.address);
   console.log("PublicationToken contract address:", publicationToken.address);
 
   console.log("Saving frontend files...");
   saveFrontEndFiles([
+    { name: "Users", address: users.address },
     { name: "PublicationStore", address: publicationStore.address },
     { name: "PublicationToken", address: publicationToken.address },
   ]);

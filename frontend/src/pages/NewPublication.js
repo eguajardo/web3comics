@@ -125,9 +125,9 @@ function NewPublication() {
       console.log("metadata.data", metadata.data);
       console.log("metadata.url", metadata.url);
 
-      const doc = await TileDocument.load(idx.ceramic, publicationsStream);
+      const tile = await TileDocument.load(idx.ceramic, publicationsStream);
 
-      let newContent = doc.content;
+      let newContent = tile.content;
       newContent.publications.push({
         thumbnail: `ipfs://${thumbnailCid}`,
         metadata: metadata.url,
@@ -137,7 +137,7 @@ function NewPublication() {
 
       const index = newContent.publications.length - 1;
 
-      await doc.update(newContent);
+      await tile.update(newContent);
 
       sendCreatePublicationStore(
         publicationsStream,

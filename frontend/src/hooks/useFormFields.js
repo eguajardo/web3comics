@@ -57,6 +57,15 @@ export function useFormFields(initialValues) {
     return isValid;
   };
 
+  const resetForm = () => {
+    for (const key in formFields) {
+      formFields[key].isTouched = false;
+      formFields[key].value = "";
+    }
+
+    setFormFields(formFields);
+  };
+
   const createValueChangeHandler = (key) => (event) => {
     const changedAttrs = {};
 
@@ -86,5 +95,6 @@ export function useFormFields(initialValues) {
     createInputBlurHandler,
     validateForm,
     hasError,
+    resetForm,
   };
 }

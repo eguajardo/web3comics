@@ -11,7 +11,7 @@ function ComicCard(props) {
   };
 
   return (
-    <div className="card comic-card" onClick={viewComic}>
+    <div className="card card-selectable comic-card" onClick={viewComic}>
       <div className="row">
         <div className="col-md-5">
           <img

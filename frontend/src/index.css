@@ -87,7 +87,7 @@ a,
   box-shadow: 0px 5px 5px 0px rgb(79 204 205 / 25%);
 }
 
-.card:hover {
+.card-selectable:hover {
   border: 1px solid #4fcccd;
 }
 
@@ -111,6 +111,13 @@ a,
   height: 200px;
   width: 200px;
   object-fit: cover;
+}
+
+.profile-picture-comment {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border: 1px;
 }
 
 .profile-picture-thumbnail {
@@ -151,4 +158,14 @@ a,
   max-width: 300px;
   max-height: 350px;
   object-fit: cover;
+}
+
+.comment-card {
+  max-width: 100% !important;
+  margin-bottom: 0 !important;
+}
+
+.comment-timestamp {
+  font-size: 0.85em;
+  color: #555;
 }

@@ -1,10 +1,14 @@
 import toast from "react-hot-toast";
+import { constants } from "ethers";
 import { web3storage } from "../helpers/ipfs";
+import { TileDocument } from "@ceramicnetwork/stream-tile";
 
 import { useFormFields } from "../hooks/useFormFields";
 import { useProfile } from "../hooks/useProfile";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
+import { useContract } from "../hooks/useContract";
+import { useContractFunction } from "@usedapp/core";
 
 import LoginCheck from "../components/UI/LoginCheck";
 import PageContainer from "../components/Layout/PageContainer";
@@ -16,6 +20,12 @@ function Profile() {
   const routerHistory = useHistory();
   const { profile, setProfile, idx } = useProfile();
   const [formProcessing, setFormProcessing] = useState(false);
+  const usersContract = useContract("Users");
+
+  const { state: ethTxState, send: sendRegisterDid } = useContractFunction(
+    usersContract,
+    "registerDid"
+  );
 
   console.log("Profile", profile);
   console.log("IDX", idx);
@@ -52,6 +62,38 @@ function Profile() {
     }
   }, [profile]);
 
+  const finishProfileUpdate = useCallback(() => {
+    setFormProcessing(false);
+    toast.success("Profile updated!");
+
+    let referer;
+    if (location.state) {
+      referer = location.state.referer;
+    } else {
+      referer = "/profile";
+    }
+    routerHistory.push(referer);
+    return <></>;
+  }, [location.state, routerHistory]);
+
+  useEffect(() => {
+    if (ethTxState && formProcessing) {
+      switch (ethTxState.status) {
+        case "Success":
+          finishProfileUpdate();
+          return <></>;
+        case "Exception":
+        case "Fail":
+          setFormProcessing(false);
+          console.log("Transaction Error:", ethTxState.errorMessage);
+          toast.error(ethTxState.errorMessage);
+          break;
+        default:
+          console.log("Transaction status:", ethTxState.status);
+      }
+    }
+  }, [ethTxState, formProcessing, finishProfileUpdate]);
+
   const formSubmissionHandler = async (event) => {
     event.preventDefault();
 
@@ -78,19 +120,24 @@ function Profile() {
           },
         };
       }
+      if (!profile.commentsStream) {
+        const tile = await TileDocument.create(idx.ceramic, {});
+        const commentsStream = tile.id.toString();
+        await idx.ceramic.pin.add(commentsStream);
+
+        updatedProfile.commentsStream = commentsStream;
+      }
 
       setProfile(idx, updatedProfile);
-      setFormProcessing(false);
-      toast.success("Profile updated!");
 
-      let referer;
-      if (location.state) {
-        referer = location.state.referer;
+      const address = await usersContract.didAddress(idx.id);
+      if (address === constants.AddressZero) {
+        console.log("Registering DID in contract");
+        sendRegisterDid(idx.id);
       } else {
-        referer = "/profile";
+        finishProfileUpdate();
+        return <></>;
       }
-      routerHistory.push(referer);
-      return <></>;
     } catch (err) {
       setFormProcessing(false);
       console.log(err);

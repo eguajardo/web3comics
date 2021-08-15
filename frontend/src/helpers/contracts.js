@@ -1,7 +1,57 @@
 export const contracts = {
   "localhost": {
+    "Users": {
+      "address": "0xa13318684281a820304C164427396385C306d870",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "did",
+              "type": "string"
+            }
+          ],
+          "name": "didAddress",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "dids",
+          "outputs": [
+            {
+              "internalType": "string[]",
+              "name": "",
+              "type": "string[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "did",
+              "type": "string"
+            }
+          ],
+          "name": "registerDid",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    },
     "PublicationStore": {
-      "address": "0x5b40489524a5733e0F145bf0E1F6712dcDB8E837",
+      "address": "0xa4aE41b9bB88Eb03048EA3bb71AB32A62ebC7188",
       "abi": [
         {
           "inputs": [
@@ -239,7 +289,7 @@ export const contracts = {
       ]
     },
     "PublicationToken": {
-      "address": "0x0b8c1b96Eda0A40F218A4DF438B35E821b2Cc1F7",
+      "address": "0x2D34e898b227bB0485464e42a5bA18D8f823c276",
       "abi": [
         {
           "inputs": [

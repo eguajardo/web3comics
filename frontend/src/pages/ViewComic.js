@@ -25,8 +25,6 @@ function ViewComic() {
     }
 
     const tile = await TileDocument.load(ceramic, publicationsStream);
-    // const content = { ...tile.content, author: idx.id };
-    // await tile.update(content);
     console.log("tile.content", tile.content);
     setAuthorDid(tile.content.author);
 

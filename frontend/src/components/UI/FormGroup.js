@@ -30,6 +30,7 @@ function FormGroup(props) {
         placeholder={props.formField.placeholder}
         rows={props.formField.rows}
         className={className}
+        disabled={props.disabled}
       />
     );
   } else {
@@ -44,13 +45,16 @@ function FormGroup(props) {
         placeholder={props.formField.placeholder}
         step={props.formField.step}
         className={className}
+        disabled={props.disabled}
       />
     );
   }
 
   return (
     <div className="form-group">
-      <label htmlFor={props.formField.id}>{props.formField.label}</label>
+      {props.formField.label && (
+        <label htmlFor={props.formField.id}>{props.formField.label}</label>
+      )}
       {previewSrc && (
         <div>
           <img

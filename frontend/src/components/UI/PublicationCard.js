@@ -27,7 +27,10 @@ function PublicationCard(props) {
   };
 
   return (
-    <div className="card publication-card" onClick={vewPublication}>
+    <div
+      className="card card-selectable publication-card"
+      onClick={vewPublication}
+    >
       <div className="row">
         <div className="col-md-2">
           <img
