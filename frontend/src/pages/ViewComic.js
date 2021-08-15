@@ -67,7 +67,14 @@ function ViewComic() {
       </ActionsContainer>
       <PageContainer>
         <div className="content-container">
-          <div className="">{content}</div>
+          <div className="">
+            {idx && authorDid === idx.id && content.length === 0 && (
+              <div className="text-center">
+                Your web3comic doesn't have any pages yet!
+              </div>
+            )}
+            {content}
+          </div>
         </div>
       </PageContainer>
     </div>

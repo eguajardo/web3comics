@@ -77,7 +77,14 @@ function Comics() {
       </ActionsContainer>
       <PageContainer>
         <div className="content-container">
-          <div className="">{content}</div>
+          <div className="">
+            {idx && did === idx.id && content.length === 0 && (
+              <div className="text-center">
+                You haven't published any web3comic yet!
+              </div>
+            )}
+            {content}
+          </div>
         </div>
       </PageContainer>
     </div>

@@ -8,6 +8,7 @@ import NFTCard from "../components/UI/NFTCard";
 function MyCollection() {
   const { account } = useEthers();
   const [content, setContent] = useState();
+  const [noBalance, setNoBalance] = useState(false);
   const publicationTokenContract = useContract("PublicationToken");
 
   const loadCollection = useCallback(async () => {
@@ -16,6 +17,11 @@ function MyCollection() {
     }
     console.log("account", account);
     const balance = await publicationTokenContract.balanceOf(account);
+    console.log("nft balance", balance);
+    if (parseInt(balance) === 0) {
+      setNoBalance(true);
+      return;
+    }
     const totalSupply = await publicationTokenContract.totalSupply();
 
     let cardsDeck = [];
@@ -40,7 +46,11 @@ function MyCollection() {
 
   return (
     <PageContainer>
-      <div className="card-deck d-flex justify-content-center">{content}</div>
+      <div className="card-deck d-flex justify-content-center">
+        {noBalance &&
+          "You haven't purchased any NFT yet! Start supporting your favorite authors by purchasing and collecting their comics!"}
+        {content}
+      </div>
     </PageContainer>
   );
 }
