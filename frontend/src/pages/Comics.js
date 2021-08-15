@@ -59,7 +59,7 @@ function Comics() {
 
       setContent(comicsCards);
     }
-  }, [idx, did]);
+  }, [idx, did, usersContract]);
 
   useEffect(() => {
     loadComics();
