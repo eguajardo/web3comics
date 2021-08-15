@@ -1,7 +1,7 @@
 export const contracts = {
   "localhost": {
     "Users": {
-      "address": "0x1aaaD333A7d363a8576779B71BF589580cC9D82E",
+      "address": "0x9F95c870a4104603630CBEDBbbd56c6465Cc8A58",
       "abi": [
         {
           "inputs": [
@@ -51,7 +51,7 @@ export const contracts = {
       ]
     },
     "PublicationStore": {
-      "address": "0x9F95c870a4104603630CBEDBbbd56c6465Cc8A58",
+      "address": "0x5Ab685866a7EFFd6e08EA40b1F360b19fE024975",
       "abi": [
         {
           "inputs": [
@@ -289,7 +289,7 @@ export const contracts = {
       ]
     },
     "PublicationToken": {
-      "address": "0x47588Dd194e960C04Ad9b180ed23ae722486C610",
+      "address": "0xB8FC6cFAb3E190e648aac2d7aB69d466f3674bDB",
       "abi": [
         {
           "inputs": [

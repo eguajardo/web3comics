@@ -8,6 +8,7 @@ function PublicationCard(props) {
   const [metadata, setMetadata] = useState();
 
   const loadPublicationCard = useCallback(async () => {
+    console.log("Metadata URL", toGatewayURL(props.metadata));
     const metadataFile = await fetch(toGatewayURL(props.metadata));
 
     const json = await metadataFile.json();

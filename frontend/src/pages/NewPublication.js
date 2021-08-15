@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { web3storage, nftStorage } from "../helpers/ipfs";
 import { utils } from "ethers";
 import { TileDocument } from "@ceramicnetwork/stream-tile";
+import { Blob } from "web3.storage/dist/bundle.esm.min.js";
 
 import { useState, useEffect } from "react";
 import { useFormFields } from "../hooks/useFormFields";
@@ -118,15 +119,34 @@ function NewPublication() {
 
       console.log("Uploaded thumbnail to web3.storage");
 
-      const metadata = await nftStorage.store({
-        name: formFields.title.value,
-        description: formFields.title.value,
-        image: formFields.image.enteredFiles[0],
+      /// nft.storage takes way too long, switched to web3.storage
+      // const metadata = await nftStorage.store({
+      //   name: formFields.title.value,
+      //   description: formFields.title.value,
+      //   image: formFields.image.enteredFiles[0],
+      // });
+
+      const imageCid = await web3storage.put(formFields.image.enteredFiles, {
+        wrapWithDirectory: false,
       });
 
+      const metadataBlob = new Blob([
+        JSON.stringify({
+          name: formFields.title.value,
+          description: formFields.title.value,
+          image: `ipfs://${imageCid}`,
+        }),
+      ]);
+
+      const files = [new File([metadataBlob], "metadata.json")];
+      const metadataCid = await web3storage.put(files, {
+        wrapWithDirectory: false,
+      });
+
+      const metadataUrl = `ipfs://${metadataCid}`;
+
       console.log("Uploaded metadata to nft.storage");
-      console.log("metadata.data", metadata.data);
-      console.log("metadata.url", metadata.url);
+      console.log("metadata.url", metadataUrl);
 
       const tile = await TileDocument.load(idx.ceramic, publicationsStream);
 
@@ -135,7 +155,7 @@ function NewPublication() {
       let newContent = tile.content;
       newContent.publications.push({
         thumbnail: `ipfs://${thumbnailCid}`,
-        metadata: metadata.url,
+        metadata: metadataUrl,
       });
 
       console.log("newContent", newContent);
@@ -149,7 +169,7 @@ function NewPublication() {
       sendCreatePublicationStore(
         publicationsStream,
         index,
-        metadata.url,
+        metadataUrl,
         utils.parseEther(formFields.price.value)
       );
     } catch (err) {
