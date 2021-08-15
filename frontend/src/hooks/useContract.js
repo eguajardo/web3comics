@@ -18,12 +18,12 @@ export function useContract(contractName) {
     console.log("chainName:", chainName);
 
     if (!contracts[chainName]) {
-      toast.error(
+      console.log(
         `Unsupported chain, make sure you are connected to a supported network ${Object.keys(
           contracts
         )}`
       );
-      throw new Error(`"Unsupported chain: ${chainId}`);
+      return null;
     }
 
     return new ethers.Contract(
