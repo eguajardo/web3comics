@@ -8,8 +8,8 @@ import ThreeIdResolver from "@ceramicnetwork/3id-did-resolver";
 import { DID } from "dids";
 
 export function anonymousIdx() {
-  const ceramic = new Ceramic("http://localhost:7007");
-  // const ceramic = new Ceramic("https://ceramic-clay.3boxlabs.com");
+  // const ceramic = new Ceramic("http://localhost:7007");
+  const ceramic = new Ceramic("https://ceramic-clay.3boxlabs.com");
 
   const aliases = {
     comics: "kjzl6cwe1jw147w5a0pmkedsnai26uizx2oyf6b7gu753a0qdw1r8elhtgxmi7z",
