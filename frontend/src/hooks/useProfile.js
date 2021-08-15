@@ -28,9 +28,11 @@ export function useProfile() {
     }
     idx = updatedIdx;
     console.log("profile before set", await idx.get("basicProfile"));
-    console.log("profile to set", profile);
+    console.log("Merging profile with IDX, please wait...");
 
     await idx.merge("basicProfile", profile);
+
+    console.log("Profile merged!");
 
     for (const listener of listeners) {
       listener[0](profile);

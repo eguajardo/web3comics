@@ -6,6 +6,7 @@ import { useProfile } from "../../hooks/useProfile";
 import { useHistory } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
+import LoadingDots from "./LoadingDots";
 
 function AccountButton() {
   const { activateBrowserWallet, account, library } = useEthers();
@@ -13,6 +14,7 @@ function AccountButton() {
   const routerHistory = useHistory();
   const [idx, setIdx] = useState(null);
   const [shouldRedirect, setShouldRedirect] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const redirectToProfile = useCallback(() => {
     console.log("redirecting to profile?", profile);
@@ -29,13 +31,15 @@ function AccountButton() {
       const idXProfile = await idx.get("basicProfile");
       console.log("idXProfile", idXProfile);
 
-      setProfile(idx, idXProfile);
+      await setProfile(idx, idXProfile);
+      setLoading(false);
       setShouldRedirect(true);
     }
   }, [idx, setProfile]);
 
   const authenticateWithIDX = useCallback(async () => {
     if (account && library && library.provider) {
+      setLoading(true);
       setIdx(await newIdx(library.provider, account));
     }
   }, [account, library]);
@@ -65,7 +69,8 @@ function AccountButton() {
           className="btn btn-outline-info nav-item nav-link px-4 ml-2"
           onClick={connect}
         >
-          Login
+          {!loading && "Login"}
+          {loading && <LoadingDots />}
         </button>
       )}
       {profile && (
