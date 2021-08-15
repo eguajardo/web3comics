@@ -90,6 +90,9 @@ contract PublicationStore is Context {
         require(msg.value == publication.price, "ERROR_INVALID_AMOUNT");
 
         uint256 tokenId = tokenContract.mint(_msgSender(), publication.uri);
+
+        payable(publication.author).transfer(msg.value);
+
         emit PublicationPurchased(tokenId, streamId, index);
         return tokenId;
     }

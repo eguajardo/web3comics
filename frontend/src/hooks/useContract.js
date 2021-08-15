@@ -11,6 +11,8 @@ export function useContract(contractName) {
       console.log("no chainid");
       return null;
     }
+
+    console.log("chainId", chainId);
     const chainName =
       getChainName(chainId).toLowerCase() === "hardhat"
         ? "localhost"

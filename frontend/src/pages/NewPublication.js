@@ -48,7 +48,7 @@ function NewPublication() {
       type: "number",
       id: "price",
       label: "Price (MATIC token)",
-      step: 0.01,
+      step: 0.001,
       validator: (field) => {
         if (!field.value || field.value <= 0) {
           console.log("price value:", field.value);
