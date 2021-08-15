@@ -73,7 +73,7 @@ function AccountButton() {
           {loading && <LoadingDots />}
         </button>
       )}
-      {profile && (
+      {profile && profile.image && (
         <NavLink
           id="new-link"
           className="nav-item nav-link"
