@@ -5,8 +5,17 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ChainId, DAppProvider } from "@usedapp/core";
 import { BrowserRouter } from "react-router-dom";
+import { contracts } from "./helpers/contracts";
+
+let readOnlyChainId;
+if (contracts.localhost) {
+  readOnlyChainId = ChainId.Hardhat;
+} else if (contracts.mumbai) {
+  readOnlyChainId = ChainId.Mumbai;
+}
 
 const config = {
+  readOnlyChainId: readOnlyChainId,
   readOnlyUrls: {
     [ChainId.Hardhat]: "http://127.0.0.1:8545",
     [ChainId.Mumbai]: "https://rpc-mumbai.maticvigil.com",

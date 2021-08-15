@@ -61,13 +61,20 @@ function ViewComic() {
             className="btn btn-info ml-2"
             to={`/comic/${publicationsStream}/new`}
           >
-            Add new publication
+            Add a new page
           </Link>
         )}
       </ActionsContainer>
       <PageContainer>
         <div className="content-container">
-          <div className="">{content}</div>
+          <div className="">
+            {idx && authorDid === idx.id && content.length === 0 && (
+              <div className="text-center">
+                Your web3comic doesn't have any pages yet!
+              </div>
+            )}
+            {content}
+          </div>
         </div>
       </PageContainer>
     </div>

@@ -1,6 +1,9 @@
+import { anonymousIdx } from "../helpers/ceramic";
+
 import { useState, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useProfile } from "../hooks/useProfile";
+import { useContract } from "../hooks/useContract";
 
 import PageContainer from "../components/Layout/PageContainer";
 import ActionsContainer from "../components/Layout/ActionsContainer";
@@ -11,17 +14,39 @@ function Comics() {
   const { did } = useParams();
   const { idx } = useProfile();
   const [content, setContent] = useState([]);
+  const usersContract = useContract("Users");
 
   const loadComics = useCallback(async () => {
-    let comicsList = [];
-    if (idx) {
-      comicsList = await idx.get("comics");
+    let ceramicIdx = idx;
+    if (!idx) {
+      ceramicIdx = anonymousIdx();
     }
 
-    if (comicsList && comicsList.comics) {
+    let comicsList = [];
+    if (did) {
+      const userComics = await ceramicIdx.get("comics", did);
+      comicsList = userComics?.comics ?? [];
+    } else {
+      if (!usersContract) {
+        console.log("No contract defined");
+        return;
+      }
+
+      const usersDids = await usersContract.dids();
+
+      for (const userDid of usersDids) {
+        const userComics = await ceramicIdx.get("comics", userDid);
+        console.log("userComics", userComics);
+        if (userComics && userComics.comics) {
+          comicsList = [...comicsList, ...userComics.comics];
+        }
+      }
+    }
+
+    if (comicsList) {
       let comicsCards = [];
 
-      comicsList.comics.forEach((comic, i) => {
+      comicsList.forEach((comic, i) => {
         comicsCards.push(
           <ComicCard
             key={i}
@@ -35,7 +60,7 @@ function Comics() {
 
       setContent(comicsCards);
     }
-  }, [idx]);
+  }, [idx, did, usersContract]);
 
   useEffect(() => {
     loadComics();
@@ -52,7 +77,14 @@ function Comics() {
       </ActionsContainer>
       <PageContainer>
         <div className="content-container">
-          <div className="">{content}</div>
+          <div className="">
+            {idx && did === idx.id && content.length === 0 && (
+              <div className="text-center">
+                You haven't published any web3comic yet!
+              </div>
+            )}
+            {content}
+          </div>
         </div>
       </PageContainer>
     </div>

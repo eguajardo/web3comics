@@ -47,8 +47,8 @@ function NewPublication() {
     price: {
       type: "number",
       id: "price",
-      label: "Price",
-      step: 0.01,
+      label: "Price (MATIC token)",
+      step: 0.001,
       validator: (field) => {
         if (!field.value || field.value <= 0) {
           console.log("price value:", field.value);
@@ -192,7 +192,7 @@ function NewPublication() {
           />
 
           <SubmitButton formProcessing={formProcessing}>
-            {!formProcessing && "Create Comic"}
+            {!formProcessing && "Add page to comic"}
           </SubmitButton>
         </form>
       )}

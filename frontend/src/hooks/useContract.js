@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { contracts } from "../helpers/contracts";
 import { ethers } from "ethers";
 import { useEthers, getChainName } from "@usedapp/core";
@@ -9,8 +8,11 @@ export function useContract(contractName) {
 
   const contract = useMemo(() => {
     if (!chainId) {
+      console.log("no chainid");
       return null;
     }
+
+    console.log("chainId", chainId);
     const chainName =
       getChainName(chainId).toLowerCase() === "hardhat"
         ? "localhost"
@@ -18,12 +20,12 @@ export function useContract(contractName) {
     console.log("chainName:", chainName);
 
     if (!contracts[chainName]) {
-      toast.error(
+      console.log(
         `Unsupported chain, make sure you are connected to a supported network ${Object.keys(
           contracts
         )}`
       );
-      throw new Error(`"Unsupported chain: ${chainId}`);
+      return null;
     }
 
     return new ethers.Contract(

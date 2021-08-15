@@ -16,7 +16,7 @@ export function useProfile() {
     };
   }, [setState, setIdx]);
 
-  const setProfile = async (updatedIdx, updatedProfile) => {
+  const setProfile = useCallback(async (updatedIdx, updatedProfile) => {
     if (!updatedIdx) {
       throw new Error("Missing IDX instance");
     }
@@ -27,19 +27,28 @@ export function useProfile() {
       profile = updatedProfile;
     }
     idx = updatedIdx;
+    console.log("profile before set", await idx.get("basicProfile"));
+    console.log("Merging profile with IDX, please wait...");
 
     await idx.merge("basicProfile", profile);
+
+    console.log("Profile merged!");
 
     for (const listener of listeners) {
       listener[0](profile);
       listener[1](idx);
     }
-  };
+  }, []);
 
   const resetProfile = useCallback(() => {
-    setState(null);
-    setIdx(null);
-  }, [setState, setIdx]);
+    profile = null;
+    idx = null;
+
+    for (const listener of listeners) {
+      listener[0](profile);
+      listener[1](idx);
+    }
+  }, []);
 
   return { profile, setProfile, resetProfile, idx };
 }

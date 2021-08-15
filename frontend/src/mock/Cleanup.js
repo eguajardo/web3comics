@@ -4,7 +4,10 @@ import PageContainer from "../components/Layout/PageContainer";
 import LoginCheck from "../components/UI/LoginCheck";
 
 function Cleanup() {
-  const { idx } = useProfile();
+  const { idx, resetProfile } = useProfile();
+
+  console.log("cleanup idx", idx);
+  console.log("cleanup idx.id", idx?.id);
 
   const cleanIdx = async () => {
     console.log("profile before cleanup", await idx.get("basicProfile"));
@@ -14,6 +17,7 @@ function Cleanup() {
     console.log("cleaned up profile");
     await idx.remove("comics");
     console.log("cleaned up comics");
+    resetProfile();
 
     console.log("profile after cleanup", await idx.get("basicProfile"));
     console.log("comics after cleanup", await idx.get("comics"));
