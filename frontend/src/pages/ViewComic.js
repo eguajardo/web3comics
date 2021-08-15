@@ -61,7 +61,7 @@ function ViewComic() {
             className="btn btn-info ml-2"
             to={`/comic/${publicationsStream}/new`}
           >
-            Add new publication
+            Add a new page
           </Link>
         )}
       </ActionsContainer>

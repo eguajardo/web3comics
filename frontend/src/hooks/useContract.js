@@ -1,4 +1,3 @@
-import toast from "react-hot-toast";
 import { contracts } from "../helpers/contracts";
 import { ethers } from "ethers";
 import { useEthers, getChainName } from "@usedapp/core";
@@ -9,6 +8,7 @@ export function useContract(contractName) {
 
   const contract = useMemo(() => {
     if (!chainId) {
+      console.log("no chainid");
       return null;
     }
     const chainName =

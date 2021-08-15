@@ -28,6 +28,7 @@ function Comics() {
       comicsList = userComics?.comics ?? [];
     } else {
       if (!usersContract) {
+        console.log("No contract defined");
         return;
       }
 

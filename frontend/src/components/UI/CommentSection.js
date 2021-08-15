@@ -49,13 +49,13 @@ function CommentSection() {
       ceramicIdx = anonymousIdx();
     }
 
-    const dids = await usersContract.dids();
+    const usersDids = await usersContract.dids();
 
-    console.log("all dids", dids);
+    console.log("all dids", usersDids);
 
     let loadedComments = [];
-    for (const did of dids) {
-      const commentsStream = (await ceramicIdx.get("basicProfile", did))
+    for (const userDid of usersDids) {
+      const commentsStream = (await ceramicIdx.get("basicProfile", userDid))
         .commentsStream;
 
       console.log("commentsStream", commentsStream);
@@ -84,7 +84,8 @@ function CommentSection() {
           console.log("Comment added", didComment.comment);
           loadedComments.push(
             <Comment
-              did={did}
+              key={didComment.timestamp}
+              did={userDid}
               comment={didComment.comment}
               timestamp={didComment.timestamp}
             />
