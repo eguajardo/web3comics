@@ -45,7 +45,7 @@ function Profile() {
     name: {
       type: "text",
       id: "name",
-      label: "Nickname",
+      label: "Username",
       value: profile ? profile.name : null,
       placeholder: "Satoshi",
       validator: (field) => {
@@ -120,7 +120,7 @@ function Profile() {
           },
         };
       }
-      if (!profile.commentsStream) {
+      if (!profile || !profile.commentsStream) {
         const tile = await TileDocument.create(idx.ceramic, {});
         const commentsStream = tile.id.toString();
         await idx.ceramic.pin.add(commentsStream);

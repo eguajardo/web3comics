@@ -116,16 +116,21 @@ function NewPublication() {
         }
       );
 
+      console.log("Uploaded thumbnail to web3.storage");
+
       const metadata = await nftStorage.store({
         name: formFields.title.value,
         description: formFields.title.value,
         image: formFields.image.enteredFiles[0],
       });
 
+      console.log("Uploaded metadata to nft.storage");
       console.log("metadata.data", metadata.data);
       console.log("metadata.url", metadata.url);
 
       const tile = await TileDocument.load(idx.ceramic, publicationsStream);
+
+      console.log("Loaded publication stream");
 
       let newContent = tile.content;
       newContent.publications.push({
@@ -138,6 +143,8 @@ function NewPublication() {
       const index = newContent.publications.length - 1;
 
       await tile.update(newContent);
+
+      console.log("Updated publication stream");
 
       sendCreatePublicationStore(
         publicationsStream,

@@ -13,6 +13,8 @@ import ViewComic from "./pages/ViewComic";
 import NewPublication from "./pages/NewPublication";
 import ViewPublication from "./pages/ViewPublication";
 import MyCollection from "./pages/MyCollection";
+import Cleanup from "./mock/Cleanup";
+import NetworkAlert from "./components/Layout/NetworkAlert";
 
 function App() {
   const { account, library } = useEthers();
@@ -27,6 +29,7 @@ function App() {
       <div>
         <Toaster />
       </div>
+      <NetworkAlert />
       <Navbar />
       <Switch>
         <Route path="/profile">
@@ -37,6 +40,9 @@ function App() {
         </Route>
         <Route path="/comic/new">
           <NewComic />
+        </Route>
+        <Route path="/cleanup">
+          <Cleanup />
         </Route>
         <Route path="/comic/:publicationsStream/new">
           <NewPublication />

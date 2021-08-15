@@ -169,3 +169,7 @@ a,
   font-size: 0.85em;
   color: #555;
 }
+
+.top-alert {
+  margin-bottom: 0;
+}

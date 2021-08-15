@@ -14,7 +14,7 @@ function MyCollection() {
     if (!publicationTokenContract) {
       return null;
     }
-
+    console.log("account", account);
     const balance = await publicationTokenContract.balanceOf(account);
     const totalSupply = await publicationTokenContract.totalSupply();
 
